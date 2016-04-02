@@ -30,15 +30,15 @@ var co   = require("co")
 var Package = require("./package.json")
 
 /*  the HAPI plugin register function  */
-var register = (server, options, next) => {
+var register = function (server, options, next) {
 
     /*  perform WebSocket handling on HAPI start  */
     server.ext({ type: "onPostStart", method: function (server, next) {
 
         /*  iterate over all routes  */
         var connections = server.table()
-        connections.forEach((connection) => {
-            connection.table.forEach((route) => {
+        connections.forEach(function (connection) {
+            connection.table.forEach(function (route) {
 
                 /*  on-the-fly replace plain generator function with regular function
                     which internally uses the generator function as a co-routine  */
