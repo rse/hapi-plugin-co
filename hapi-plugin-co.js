@@ -33,7 +33,7 @@ var Package = require("./package.json")
 var register = function (server, options, next) {
 
     /*  perform WebSocket handling on HAPI start  */
-    server.ext({ type: "onPostStart", method: function (server, next) {
+    server.ext({ type: "onPreStart", method: function (server, next) {
 
         /*  iterate over all routes  */
         var connections = server.table()
