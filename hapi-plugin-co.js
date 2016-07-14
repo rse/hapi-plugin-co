@@ -56,7 +56,7 @@ var register = function (server, options, next) {
                                 /*  convert errors into HTTP replies  */
                                 if (!(typeof err === "object" && err.isBoom)) {
                                     if (err instanceof Error) {
-                                        err = Boom.create(500, err.message)
+                                        err = Boom.wrap(err, 500)
                                         request.log([ "error", "uncaught" ], err.message)
                                     }
                                     else if (typeof err === "string") {
