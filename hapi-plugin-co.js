@@ -56,16 +56,16 @@ var register = function (server, options, next) {
                                 /*  convert errors into HTTP replies  */
                                 if (!(typeof err === "object" && err.isBoom)) {
                                     if (err instanceof Error) {
+                                        request.log([ "error", "uncaught" ], err.stack)
                                         err = Boom.wrap(err, 500)
-                                        request.log([ "error", "uncaught" ], err.message)
                                     }
                                     else if (typeof err === "string") {
-                                        err = Boom.create(500, err)
                                         request.log([ "error", "uncaught" ], err)
+                                        err = Boom.create(500, err)
                                     }
                                     else {
-                                        err = Boom.create(500, String(err))
                                         request.log([ "error", "uncaught" ], String(err))
+                                        err = Boom.create(500, String(err))
                                     }
                                 }
                                 reply(err)
@@ -89,4 +89,3 @@ register.attributes = { pkg: Package }
 
 /*  export register function, wrapped in a plugin object  */
 module.exports = { register: register }
-
