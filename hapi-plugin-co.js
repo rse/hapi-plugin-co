@@ -89,3 +89,4 @@ register.attributes = { pkg: Package }
 
 /*  export register function, wrapped in a plugin object  */
 module.exports = { register: register }
+
