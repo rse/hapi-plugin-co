@@ -50,8 +50,9 @@ var register = function (server, options, next) {
                             /*  execute generator function as a co-routine  */
                             co.wrap(handler.bind(this))(request, reply).then(function (result) {
                                 /*  convert return values into HTTP replies  */
-                                if (result !== undefined)
-                                    reply(result)
+                                if (result !== undefined) {
+                                    return result
+                                }
                             }).catch(function (err) {
                                 /*  convert errors into HTTP replies  */
                                 if (!(typeof err === "object" && err.isBoom)) {
@@ -68,7 +69,7 @@ var register = function (server, options, next) {
                                         err = Boom.create(500, String(err))
                                     }
                                 }
-                                reply(err)
+                                return err
                             })
                         }
                     })(route.settings.handler)
