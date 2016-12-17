@@ -68,6 +68,9 @@ var register = function (server, options, next) {
                                         err = Boom.create(500, String(err))
                                     }
                                 }
+                                if (err.data && typeof err.data === "object") {
+                                  Object.assign(err.output.payload, err.data);
+                                }
                                 reply(err)
                             })
                         }
@@ -89,4 +92,3 @@ register.attributes = { pkg: Package }
 
 /*  export register function, wrapped in a plugin object  */
 module.exports = { register: register }
-
