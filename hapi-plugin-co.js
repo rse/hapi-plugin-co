@@ -45,12 +45,19 @@ var register = function (server, options, next) {
                 if (   typeof route.settings.handler === "function"
                     && route.settings.handler.constructor.name === "GeneratorFunction") {
                     route.settings.handler = (function (handler) {
+
+                        /*  outer scope: provide regular handler function  */
                         return function (request, reply) {
 
                             /*  execute generator function as a co-routine  */
                             co.wrap(handler.bind(this))(request, reply).then(function (result) {
-                                /*  convert return values into HTTP replies  */
-                                if (result !== undefined)
+                                /*  convert return values into HTTP replies
+                                    in case it isn't already a HAPI response object */
+                                if (   result !== undefined
+                                    && !(   typeof result         === "object"
+                                         && typeof result.code    === "function"
+                                         && typeof result.message === "function"
+                                         && typeof result.header  === "function"))
                                     reply(result)
                             }).catch(function (err) {
                                 /*  convert errors into HTTP replies  */
@@ -68,8 +75,14 @@ var register = function (server, options, next) {
                                         err = Boom.create(500, String(err))
                                     }
                                 }
+
+                                /*  explicity call HAPI reply() method, as it is unlikely
+                                    that it was already called because of the exception
+                                    and we have to ensure the error is handled by HAPI  */
                                 reply(err)
                             })
+
+                            /*  NOTICE: HAPI handlers use no return values  */
                         }
                     })(route.settings.handler)
                 }
