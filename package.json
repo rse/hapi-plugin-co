@@ -17,7 +17,7 @@
     "homepage": "https://github.com/rse/hapi-plugin-co",
     "bugs":     "https://github.com/rse/hapi-plugin-co/issues",
     "devDependencies": {
-        "hapi":        "~15.2.0"
+        "hapi":        "~16.1.0"
     },
     "dependencies": {
         "boom":        "~4.2.0",
