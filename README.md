@@ -86,7 +86,8 @@ server.register(HAPICo, function () {
 Notice
 ------
 
-With [`hapi-async-handler`](https://github.com/ide/hapi-async-handler)
+The smaller alternative: With
+[`hapi-async-handler`](https://github.com/ide/hapi-async-handler)
 there is an alternative HAPI plugin with similar functionality. The
 difference is that `hapi-async-handler` uses the official HAPI `handler`
 functionality to provide its functionality (and this way unfortunately
@@ -96,11 +97,12 @@ recognize `Boom` error responses, requires an ES7 `async function ()`
 does not use `co` internally (and this way cannot easily support the
 yielding of regular values, promises, sunks, etc).
 
-With [`hapi-co`](https://github.com/bandwidthcom/co-hapi)
-there is another alternative HAPI plugin with a much larger
-functionality. It allows the use of `co`-powered generator functions for
-all types of callbacks, including handlers. If you really need all this
-additional functionality, go with this module instead.
+The larger alternative: With
+[`hapi-co`](https://github.com/bandwidthcom/co-hapi) there is
+another alternative HAPI plugin with a much larger functionality. It
+allows the use of `co`-powered generator functions for all types of
+callbacks, including handlers. If you really need all this additional
+functionality, go with this module instead.
 
 License
 -------
