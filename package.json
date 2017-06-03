@@ -17,13 +17,13 @@
     "homepage": "https://github.com/rse/hapi-plugin-co",
     "bugs":     "https://github.com/rse/hapi-plugin-co/issues",
     "devDependencies": {
-        "hapi":            "~16.1.1",
+        "hapi":            "~16.3.0",
         "request":         "~2.81.0",
         "request-promise": "~4.2.1",
         "bluebird":        "~3.5.0"
     },
     "dependencies": {
-        "boom":            "~4.3.1",
+        "boom":            "~5.1.0",
         "co":              "~4.6.0"
     },
     "engines": {
