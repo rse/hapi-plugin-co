@@ -1,6 +1,6 @@
 {
     "name":        "hapi-plugin-co",
-    "version":     "0.9.9",
+    "version":     "0.9.10",
     "description": "HAPI plugin for Co-Routine handlers",
     "keywords":    [ "hapi", "plugin", "co", "handler" ],
     "main":        "./hapi-plugin-co.js",
