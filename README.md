@@ -21,7 +21,18 @@ About
 -----
 
 This is a small plugin for the [HAPI](http://hapijs.com/) server
-framework for seamless support of co-routines for route handlers.
+framework for seamless support of co-routines for route handlers,
+based on generator functions.
+
+NOTICE
+------
+
+Although this plugin was ported to and works just with HAPI version
+&gt;= 17.0.0 and Node.js version &gt; 8.0.0, you are advised to use
+*asynchronous functions* with HAPI version &gt;= 17.0.0's native support
+instead of *generator functions* and this HAPI plugin support. Generator
+functions and this HAPI plugin are actually from the HAPI version &lt;
+17.0.0 and Node.js version &lt; 8.0.0 era.
 
 Usage
 -----
@@ -31,9 +42,8 @@ It responds with `{ value: 42 }` after waiting for a second.
 
 ```js
 var HAPI    = require("hapi")
-var HAPICo  = require("./hapi-plugin-co")
+var HAPICo  = require("hapi-plugin-co")
 var Request = require("request-promise")
-var Promise = require("bluebird")
 
 var server = new HAPI.Server({ debug: { request: [ "error" ] } })
 server.connection({ address: "127.0.0.1", port: 12345 })

@@ -27,79 +27,57 @@ var Boom = require("boom")
 var co   = require("co")
 
 /*  internal dependencies  */
-var Package = require("./package.json")
+var pkg  = require("./package.json")
 
 /*  the HAPI plugin register function  */
-var register = function (server, options, next) {
+var register = async (server, options) => {
 
     /*  perform WebSocket handling on HAPI start  */
-    server.ext({ type: "onPreStart", method: function (server, next) {
+    server.ext({ type: "onPreStart", method: (server) => {
 
         /*  iterate over all routes  */
-        var connections = server.table()
-        connections.forEach(function (connection) {
-            connection.table.forEach(function (route) {
+        server.table().forEach((route) => {
 
-                /*  on-the-fly replace plain generator function with regular function
-                    which internally uses the generator function as a co-routine  */
-                if (   typeof route.settings.handler === "function"
-                    && route.settings.handler.constructor.name === "GeneratorFunction") {
-                    route.settings.handler = (function (handler) {
+            /*  on-the-fly replace plain generator function with regular function
+                which internally uses the generator function as a co-routine  */
+            if (   typeof route.settings.handler === "function"
+                && route.settings.handler.constructor.name === "GeneratorFunction") {
+                route.settings.handler = ((handler) => {
 
-                        /*  outer scope: provide regular handler function  */
-                        return function (request, reply) {
+                    /*  outer scope: provide regular handler function  */
+                    return (request, h) => {
 
-                            /*  execute generator function as a co-routine  */
-                            co.wrap(handler.bind(this))(request, reply).then(function (result) {
-                                /*  convert return values into HTTP replies
-                                    in case it isn't already a HAPI response object */
-                                if (   result !== undefined
-                                    && !(   typeof result         === "object"
-                                         && typeof result.code    === "function"
-                                         && typeof result.message === "function"
-                                         && typeof result.header  === "function"))
-                                    reply(result)
-                            }).catch(function (err) {
-                                /*  convert errors into HTTP replies  */
-                                if (!(typeof err === "object" && err.isBoom)) {
-                                    if (err instanceof Error) {
-                                        request.log([ "error", "uncaught" ], err.stack)
-                                        err = Boom.wrap(err, 500)
-                                    }
-                                    else if (typeof err === "string") {
-                                        request.log([ "error", "uncaught" ], err)
-                                        err = Boom.create(500, err)
-                                    }
-                                    else {
-                                        request.log([ "error", "uncaught" ], String(err))
-                                        err = Boom.create(500, String(err))
-                                    }
+                        /*  execute generator function as a co-routine  */
+                        return co.wrap(handler.bind(this))(request, h).catch((err) => {
+                            /*  convert errors into HTTP replies  */
+                            if (!(typeof err === "object" && err.isBoom)) {
+                                if (err instanceof Error) {
+                                    request.log([ "error", "uncaught" ], err.stack)
+                                    err = Boom.wrap(err, 500)
                                 }
-
-                                /*  explicity call HAPI reply() method, as it is unlikely
-                                    that it was already called because of the exception
-                                    and we have to ensure the error is handled by HAPI  */
-                                reply(err)
-                            })
-
-                            /*  NOTICE: HAPI handlers use no return values  */
-                        }
-                    })(route.settings.handler)
-                }
-            })
+                                else if (typeof err === "string") {
+                                    request.log([ "error", "uncaught" ], err)
+                                    err = Boom.create(500, err)
+                                }
+                                else {
+                                    request.log([ "error", "uncaught" ], String(err))
+                                    err = Boom.create(500, String(err))
+                                }
+                            }
+                            return err
+                        })
+                    }
+                })(route.settings.handler)
+            }
         })
-
-        /*  continue processing  */
-        next()
     }})
-
-    /*  continue processing  */
-    next()
 }
 
-/*  provide meta-information as expected by HAPI  */
-register.attributes = { pkg: Package }
-
-/*  export register function, wrapped in a plugin object  */
-module.exports = { register: register }
+/*  export as plugin object  */
+module.exports = {
+    plugin: {
+        register: register,
+        pkg:      pkg
+    }
+}
 

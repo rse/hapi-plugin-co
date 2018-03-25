@@ -16,17 +16,22 @@
     },
     "homepage": "https://github.com/rse/hapi-plugin-co",
     "bugs":     "https://github.com/rse/hapi-plugin-co/issues",
-    "devDependencies": {
-        "hapi":            "~16.4.3",
-        "request":         "~2.81.0",
-        "request-promise": "~4.2.1",
-        "bluebird":        "~3.5.0"
+    "peerDependencies": {
+        "hapi":            ">=17.0.0"
     },
     "dependencies": {
-        "boom":            "~5.1.0",
-        "co":              "~4.6.0"
+        "boom":            "7.2.0",
+        "co":              "4.6.0"
+    },
+    "devDependencies": {
+        "hapi":            "17.2.3",
+        "request":         "2.85.0",
+        "request-promise": "4.2.2"
     },
     "engines": {
-        "node":            ">=4.0.0"
+        "node":            ">=8.0.0"
+    },
+    "scripts": {
+        "test":            "node test.js"
     }
 }
