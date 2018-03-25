@@ -23,30 +23,25 @@
 */
 
 /*  external dependencies  */
-var Boom = require("boom")
-var co   = require("co")
+const Boom = require("boom")
+const co   = require("co")
 
 /*  internal dependencies  */
-var pkg  = require("./package.json")
+const pkg  = require("./package.json")
 
 /*  the HAPI plugin register function  */
-var register = async (server, options) => {
-
+const register = async (server, options) => {
     /*  perform WebSocket handling on HAPI start  */
     server.ext({ type: "onPreStart", method: (server) => {
-
         /*  iterate over all routes  */
         server.table().forEach((route) => {
-
             /*  on-the-fly replace plain generator function with regular function
                 which internally uses the generator function as a co-routine  */
             if (   typeof route.settings.handler === "function"
                 && route.settings.handler.constructor.name === "GeneratorFunction") {
                 route.settings.handler = ((handler) => {
-
                     /*  outer scope: provide regular handler function  */
                     return (request, h) => {
-
                         /*  execute generator function as a co-routine  */
                         return co.wrap(handler.bind(this))(request, h).catch((err) => {
                             /*  convert errors into HTTP replies  */
