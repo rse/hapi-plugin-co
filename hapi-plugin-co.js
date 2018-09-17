@@ -65,7 +65,7 @@ const register = async (server, options) => {
                 })(route.settings.handler)
             }
         })
-    }})
+    } })
 }
 
 /*  export as plugin object  */
