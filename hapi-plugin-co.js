@@ -48,7 +48,7 @@ const register = async (server, options) => {
                             if (!(typeof err === "object" && err.isBoom)) {
                                 if (err instanceof Error) {
                                     request.log([ "error", "uncaught" ], err.stack)
-                                    err = Boom.wrap(err, 500)
+                                    err = Boom.boomify(err, 500)
                                 }
                                 else if (typeof err === "string") {
                                     request.log([ "error", "uncaught" ], err)
