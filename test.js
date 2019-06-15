@@ -1,5 +1,5 @@
 
-var HAPI    = require("hapi")
+var HAPI    = require("@hapi/hapi")
 var HAPICo  = require("./hapi-plugin-co")
 var Request = require("request-promise")
 
