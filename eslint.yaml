@@ -61,4 +61,6 @@ rules:
     curly:                               off
     space-in-parens:                     off
     no-unneeded-ternary:                 off
+    object-curly-newline:                off
+    array-bracket-spacing:               off
 
